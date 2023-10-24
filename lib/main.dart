@@ -1,14 +1,21 @@
-import 'package:cted/Page/addProgramDayPage.dart';
+import 'package:cted/UI/Page/addProgramDayPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterfire_ui/auth.dart';
 
 //===================================================
-import 'subscribedProgramsPage.dart';
-import 'Widget/bottomBar.dart';
-import 'Page/ProgramSchedule.dart';
-import 'controller.dart';
+import 'UI/Page/ProgramSchedule.dart';
+import 'Controllers/bottomIndex_controller.dart';
+import 'UI/Page/mainPage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   return runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -20,8 +27,15 @@ void main() {
             binding: BindingsBuilder(() {
               Get.put<BottomBarIndexController>(BottomBarIndexController());
             })),
-        GetPage(name: '/ProgramSchedule', page: () => ProgramSchedule()),
-        GetPage(name: '/ProgramSchdule/addProgramDayPage', page: () => AddProgramDayPage())
+        GetPage(
+          name: '/MainPage',
+          page: () => MainPage(),
+        ),
+        GetPage(
+            name: '/MainPage/ProgramSchedule', page: () => ProgramSchedule()),
+        GetPage(
+            name: '/MainPage/ProgramSchdule/addProgramDayPage',
+            page: () => AddProgramDayPage())
       ],
     ),
   );
@@ -35,26 +49,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-  //BottomBarIndexController인스턴스
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("CTED - Crossfit Training Every Day"),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {},
-          ),
-        ),
-        body: GetX<BottomBarIndexController>(
-            builder: (_) => [
-                  SubscribedProgramsPage(),
-                  Text("경쟁을 보여줍니다"),
-                  Text("찾기를 보여줍니다."),
-                  Text("My를 보여줍니다")
-                ][Get.find<BottomBarIndexController>().bottomBarIndex.value]),
-        bottomNavigationBar: BottomBar());
+      body: Authentication(),
+    );
+  }
+}
+
+class Authentication extends StatelessWidget {
+  const Authentication({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return SignInScreen(
+              providerConfigs: [EmailProviderConfiguration()],
+            );
+          } else {
+            return MainPage();
+          }
+        });
   }
 }
 

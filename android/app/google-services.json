@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1058341337858",
+    "project_id": "cted-aa6b9",
+    "storage_bucket": "cted-aa6b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058341337858:android:26f611177fe1bb3274e01b",
+        "android_client_info": {
+          "package_name": "com.kdw.cted"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArb8VHzpYNhcaeexlOItUtK-C6xIRcmRM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

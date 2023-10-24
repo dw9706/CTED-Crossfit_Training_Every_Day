@@ -35,7 +35,12 @@ dependencies:
   google_fonts:
   get:
   calendar_timeline:
-
+  sqflite:
+  cloud_firestore:
+  firebase_core:
+  firebase_auth:
+  firebase_database:
+  flutterfire_ui:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
