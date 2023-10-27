@@ -1,6 +1,3 @@
-
-import 'package:cted/Controllers/programDayTask_controller.dart';
-import 'package:cted/models/programDayTask.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -15,12 +12,9 @@ class AddProgramDayPage extends StatefulWidget {
 class _AddProgramDayPageState extends State<AddProgramDayPage> {
   List<String> listItem = [];
   String? day;
-  final ProgramDayTaskController _taskController = Get.put(ProgramDayTaskController());
 
   _validationDay(){
     if(day != null){
-      //_addProgramDayTaskToDb();//add to database
-
       Get.back();
     } else if(day == null){
       Get.snackbar("필수 정보", "Day를 선택해 주세요.",
@@ -33,18 +27,7 @@ class _AddProgramDayPageState extends State<AddProgramDayPage> {
     }
   }
 
-/*  _addProgramDayTaskToDb(){
-    _taskController.addTask(
-        programDayTask : ProgramDayTask(
-            isCompleted : 0,
-            id : 123,
-            date: Get.arguments['date'],
-            taskDay: day,
-            content: "ffffff"
-        )
-    );
-  }
-*/
+
   @override
   void initState() {
     // TODO: implement initState

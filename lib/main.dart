@@ -8,7 +8,6 @@ import 'package:flutterfire_ui/auth.dart';
 
 //===================================================
 import 'UI/Page/ProgramSchedule.dart';
-import 'Controllers/bottomIndex_controller.dart';
 import 'UI/Page/mainPage.dart';
 
 void main() async {
@@ -24,15 +23,14 @@ void main() async {
         GetPage(
             name: '/',
             page: () => MyApp(),
-            binding: BindingsBuilder(() {
-              Get.put<BottomBarIndexController>(BottomBarIndexController());
-            })),
+            ),
         GetPage(
           name: '/MainPage',
           page: () => MainPage(),
         ),
         GetPage(
-            name: '/MainPage/ProgramSchedule', page: () => ProgramSchedule()),
+            name: '/MainPage/ProgramSchedule',
+            page: () => ProgramSchedule()),
         GetPage(
             name: '/MainPage/ProgramSchdule/addProgramDayPage',
             page: () => AddProgramDayPage())
@@ -65,7 +63,7 @@ class Authentication extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.data == null) {
+          if (!snapshot.hasData) {
             return SignInScreen(
               providerConfigs: [EmailProviderConfiguration()],
             );

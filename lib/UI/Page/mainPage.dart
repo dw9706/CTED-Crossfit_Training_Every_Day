@@ -1,10 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cted/UI/Page/subscribedProgramsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../Controllers/bottomIndex_controller.dart';
-import '../Widget/bottomBar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,7 +13,37 @@ class MainPage extends StatefulWidget {
 
 class _MyAppState extends State<MainPage> {
   // This widget is the root of your application.
-  //BottomBarIndexController인스턴스
+  int bottomBarIndex = 0;
+  final user = FirebaseAuth.instance.currentUser;
+  final firestore = FirebaseFirestore.instance;
+
+
+  _setBottomBarIndex(value) {
+    setState(() {
+      bottomBarIndex = value;
+    });
+  }
+
+  Future<bool> checkUserData(String userId) async {
+    DocumentSnapshot<Map<String, dynamic>> document = await firestore
+        .collection('userData').doc(userId).get();
+    print(document.exists);
+      if (document.exists) {
+        return true;
+      } else {
+        return false;
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future<bool> tmp = checkUserData(user!.uid);
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,17 +51,41 @@ class _MyAppState extends State<MainPage> {
           title: Text("CTED - Crossfit Training Every Day"),
           leading: IconButton(
             icon: Icon(Icons.menu),
-            onPressed: () {FirebaseAuth.instance.signOut();},
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
           ),
         ),
-        body: GetX<BottomBarIndexController>(
-            builder: (_) => [
-              SubscribedProgramsPage(),
-              Text("경쟁을 보여줍니다"),
-              Text("찾기를 보여줍니다."),
-              Text("My를 보여줍니다")
-            ][Get.find<BottomBarIndexController>().bottomBarIndex.value]),
-        bottomNavigationBar: BottomBar());
+        body: [
+          SubscribedProgramsPage(user: user, firestore: firestore),
+          Text("경쟁을 보여줍니다"),
+          Text("찾기를 보여줍니다."),
+          Text("My를 보여줍니다")
+        ][bottomBarIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.fitness_center_outlined),
+              label: '프로그램',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_events_outlined),
+              label: '경쟁',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: '찾기',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: 'MY',
+            ),
+          ],
+          currentIndex: bottomBarIndex,
+          onTap: _setBottomBarIndex,
+          selectedItemColor: Colors.black,
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: false,
+        ));
   }
 }
-
