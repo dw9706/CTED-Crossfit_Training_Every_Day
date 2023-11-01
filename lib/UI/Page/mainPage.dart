@@ -3,7 +3,6 @@ import 'package:cted/UI/Page/subscribedProgramsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -17,7 +16,6 @@ class _MyAppState extends State<MainPage> {
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
-
   _setBottomBarIndex(value) {
     setState(() {
       bottomBarIndex = value;
@@ -25,13 +23,20 @@ class _MyAppState extends State<MainPage> {
   }
 
   Future<bool> checkUserData(String userId) async {
-    DocumentSnapshot<Map<String, dynamic>> document = await firestore
-        .collection('userData').doc(userId).get();
+    DocumentSnapshot<Map<String, dynamic>> document =
+        await firestore.collection('userData').doc(userId).get();
     print(document.exists);
-      if (document.exists) {
-        return true;
-      } else {
-        return false;
+    if (document.exists) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void makeUserData() async {
+    bool tmp = await checkUserData(user!.uid);
+    if (!tmp) {
+      firestore.collection('userData').doc(user!.uid).collection('programs').add({});
     }
   }
 
@@ -39,9 +44,7 @@ class _MyAppState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future<bool> tmp = checkUserData(user!.uid);
-
-
+    makeUserData();
   }
 
   @override
@@ -89,3 +92,4 @@ class _MyAppState extends State<MainPage> {
         ));
   }
 }
+
