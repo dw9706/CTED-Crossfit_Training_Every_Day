@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class _SubscribedProgramsPageState extends State<SubscribedProgramsPage> {
     return "Empty";
   }
 
-  getProgramsName() async { //Future를 일반 List로 변환
+  getProgramsName() async { //Future<List<String>> -> List<String>
     var tmpList = await getProgramsNameFutureList();
     setState(() {
       programsName = tmpList;
@@ -36,7 +38,7 @@ class _SubscribedProgramsPageState extends State<SubscribedProgramsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement init State
     super.initState();
     getProgramsName();
   }
