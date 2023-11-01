@@ -15,44 +15,62 @@ class SubscribedProgramsPage extends StatefulWidget {
 class _SubscribedProgramsPageState extends State<SubscribedProgramsPage> {
 
   var programsName;
-
+  bool updateState = true;
   getProgramsNameFutureList() async {
     List<String> tmp = [];
-    var result = await widget.firestore.collection('userData').doc(widget.user!.uid.toString()).collection('programs').get();
-    for(var doc in result.docs){
-      tmp.add(doc['name']);
+    var result = await widget.firestore.collection('userData').doc(
+        widget.user!.uid).get();
+    if(result.exists) {
+      for (var doc in result['programs']) {
+        tmp.add(doc);
+      }
+      print(tmp);
+      if (tmp.isNotEmpty) {
+        return tmp;
+      }
+      return "Empty";
+    } else {
+      return Future.delayed(Duration(seconds: 3),() async {
+        result = await widget.firestore.collection('userData').doc(widget.user!.uid).get();
+        for (var doc in result['programs']) {
+          tmp.add(doc);
+        }
+        print(tmp);
+        if (tmp.isNotEmpty) {
+          return tmp;
+        }
+        return "Empty";
+      });
     }
-    if(tmp.isNotEmpty){
-      return tmp;
+  }
+
+    getProgramsName() async {
+      //Future<List<String>> -> List<String>
+      var tmpList = await getProgramsNameFutureList();
+      setState(() {
+        programsName = tmpList;
+      });
     }
-    return "Empty";
-  }
-
-  getProgramsName() async { //Future<List<String>> -> List<String>
-    var tmpList = await getProgramsNameFutureList();
-    setState(() {
-      programsName = tmpList;
-    });
-  }
 
 
-  @override
-  void initState() {
-    // TODO: implement init State
-    super.initState();
-    getProgramsName();
-  }
+    @override
+    void initState() {
+      // TODO: implement init State
+      super.initState();
+      getProgramsName();
+    }
 
-  @override
-  Widget build (BuildContext context) {
-    if(programsName == "Empty"){
-      return Center(
-        child: Container(
-          child: Text('you don\'t have any program',
-          style: TextStyle(color: Colors.grey)),
-        ),
-      );
-    } else if (programsName != null) {
+    @override
+    Widget build (BuildContext context) {
+
+      if (programsName == "Empty") {
+        return Center(
+          child: Container(
+            child: Text('you don\'t have any program',
+                style: TextStyle(color: Colors.grey)),
+          ),
+        );
+      } else if (programsName != null) {
         return ListView.builder(
           itemCount: programsName.length,
           itemBuilder: (context, index) {
@@ -82,10 +100,10 @@ class _SubscribedProgramsPageState extends State<SubscribedProgramsPage> {
             );
           },
         );
-    } else {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+      } else {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
     }
   }
-}

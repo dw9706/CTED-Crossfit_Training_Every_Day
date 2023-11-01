@@ -23,7 +23,6 @@ class _MyAppState extends State<MainPage> {
   }
 
   Future<bool> checkUserData(String userId) async {
-
     DocumentSnapshot<Map<String, dynamic>> document = await firestore.collection('userData').doc(userId).get();
     if (!document.exists) {
       return true;
@@ -36,7 +35,7 @@ class _MyAppState extends State<MainPage> {
 
     bool tmp = await checkUserData("${user!.uid}");
     if (tmp) {
-      await firestore.collection('userData').doc(user!.uid).set({"uid":user!.uid});
+      await firestore.collection('userData').doc(user!.uid).set({"uid":user!.uid, "programs":[]});
     }
 
   }
