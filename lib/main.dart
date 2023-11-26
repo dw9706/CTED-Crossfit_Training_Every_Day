@@ -1,10 +1,11 @@
 import 'package:cted/UI/Page/addProgramDayPage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+
 
 //===================================================
 import 'UI/Page/ProgramSchedule.dart';
@@ -59,12 +60,19 @@ class Authentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final providers = [EmailAuthProvider()];
+
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return SignInScreen(
-              providerConfigs: [EmailProviderConfiguration()],
+              providers: providers,
+              actions: [
+                AuthStateChangeAction<SignedIn>((context, state) {
+                  Navigator.pushReplacementNamed(context, '/profile');
+                }),
+              ],
             );
           } else {
             return MainPage();
