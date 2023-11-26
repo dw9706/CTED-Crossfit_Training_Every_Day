@@ -1,5 +1,7 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cted/UI/Widget/addProgramDayButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +15,32 @@ class ProgramSchedule extends StatefulWidget {
 }
 
 class _ProgramScheduleState extends State<ProgramSchedule> {
-  DateTime _selectedDate = DateTime.now();
+  final user = FirebaseAuth.instance.currentUser;
+  final firestore = FirebaseFirestore.instance;
+  DateTime _selectedDate = Get.arguments['date'];
+
+
+   Future<List<String>> getDateProgramDay() async {//해당 날짜에 있는 프로그램 day가져오기
+      print("ingetDate");
+    String day =_selectedDate.toString().substring(0,10);
+    print(day);
+    var result = await firestore.collection('userData').doc(user!.uid).collection('programs').doc(Get.arguments['name']).get();
+    List<String> tmp = List<String>.from(result[day] as List);
+    tmp.sort();
+    print(tmp);
+    print("ffff");
+    return tmp;
+    //return result;
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDateProgramDay();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +85,7 @@ class _ProgramScheduleState extends State<ProgramSchedule> {
                 ),
                 AddProgramDayButton(
                     label: '+ Add Day',
-                    onTap: () => Get.toNamed(
+                    onTap: () => Get.offNamed(
                             '/MainPage/ProgramSchdule/addProgramDayPage',
                             arguments: {
                               "name": Get.arguments["name"],
@@ -73,8 +100,11 @@ class _ProgramScheduleState extends State<ProgramSchedule> {
               firstDate: DateTime(2023, 1, 1),
               lastDate: DateTime.now().add(Duration(days: 1500)),
               onDateSelected: (date) {
-                _selectedDate = date;
-                print(_selectedDate);
+                setState(() {
+                  _selectedDate = date;
+                  print(_selectedDate);
+                  //getDateProgramDay();
+                });
               },
               leftMargin: 100,
               monthColor: Colors.grey,
@@ -85,6 +115,63 @@ class _ProgramScheduleState extends State<ProgramSchedule> {
               locale: 'en_ISO',
             ),
           ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(10),
+              child: FutureBuilder<List<String>>(
+                future:getDateProgramDay(),
+                builder: (context,snapshot){
+                  print("====");
+                  print(snapshot.data);
+
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index){
+                        return GestureDetector(
+                          onTap: (){},
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Text(snapshot.data![index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 30
+                                  ),),
+                              ],
+                            ),
+                            height: 100,
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                          ),
+                        );
+                        }
+                    );
+                  } else if (snapshot.hasError){
+                   if(snapshot.error.runtimeType == StateError){//등록한 데이가 없어서 StateError 나면....
+                     return  Center(
+                         child: Text("No training days")
+                     );
+                   } else {
+                     return Center(
+                         child: Text("Sorry, there is a problem")
+                     );
+                   }
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                }
+              ),
+            ),
+          )
           //DatePicker있는 라인
         ],
       ),

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +30,7 @@ class _SubscribedProgramsPageState extends State<SubscribedProgramsPage> {
       }
       return "Empty";
     } else {
-      return Future.delayed(Duration(seconds: 3),() async {
+      return Future.delayed(Duration(seconds: 5),() async {
         result = await widget.firestore.collection('userData').doc(widget.user!.uid).get();
         for (var doc in result['programs']) {
           tmp.add(doc);
@@ -77,7 +77,7 @@ class _SubscribedProgramsPageState extends State<SubscribedProgramsPage> {
             return GestureDetector(
               onTap: () {
                 Get.toNamed('/MainPage/ProgramSchedule',
-                    arguments: {"name": programsName[index]}); //객체도 보낼수 있음!
+                    arguments: {"name": programsName[index], "date": DateTime.now()}); //객체도 보낼수 있음!
               },
               child: Container(
                 width: 100,

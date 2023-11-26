@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,10 +14,12 @@ class AddProgramDayPage extends StatefulWidget {
 class _AddProgramDayPageState extends State<AddProgramDayPage> {
   List<String> listItem = [];
   String? day;
+  final user = FirebaseAuth.instance.currentUser;
+  final firestore = FirebaseFirestore.instance;
 
   _validationDay(){
     if(day != null){
-      Get.back();
+      return true;
     } else if(day == null){
       Get.snackbar("필수 정보", "Day를 선택해 주세요.",
       snackPosition: SnackPosition.BOTTOM,
@@ -24,17 +28,26 @@ class _AddProgramDayPageState extends State<AddProgramDayPage> {
       color: Colors.red,
       )
       );
+      return false;
     }
   }
 
+  getProgramsDays() async {
+    var result = await firestore.collection('Programs').doc(Get.arguments['name']).collection('days').get();
+    List<String> tmp = [];
+    for(var doc in result.docs){
+      tmp.add(doc['day']);
+    }
+    setState(() {
+      listItem = tmp;
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    for(int i = 1; i <=30; i++){
-      listItem.add("Day $i");
-    }
+    getProgramsDays();
   }
 
   @override
@@ -84,7 +97,16 @@ class _AddProgramDayPageState extends State<AddProgramDayPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: () => _validationDay(),
+                      onTap: () {
+                        if(_validationDay()){
+                          print(day);
+                          String date = Get.arguments['date'].toString().substring(0,10);
+                          firestore.collection('userData').doc(user!.uid).collection('programs')
+                              .doc(Get.arguments['name']).update({date: FieldValue.arrayUnion([day])}).then((_){
+                            Get.offNamed('/MainPage/ProgramSchedule', arguments: {"name": Get.arguments["name"], "date": Get.arguments['date']});
+                          });
+                        }
+                      },
                       child: Container(
                         child: Center(
                           child: Text("Add",

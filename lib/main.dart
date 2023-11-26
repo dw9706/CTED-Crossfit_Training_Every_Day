@@ -21,16 +21,15 @@ void main() async {
       theme: _themeData(),
       getPages: [
         GetPage(
-            name: '/',
-            page: () => MyApp(),
-            ),
+          name: '/',
+          page: () => MyApp(),
+        ),
         GetPage(
           name: '/MainPage',
           page: () => MainPage(),
         ),
         GetPage(
-            name: '/MainPage/ProgramSchedule',
-            page: () => ProgramSchedule()),
+            name: '/MainPage/ProgramSchedule', page: () => ProgramSchedule()),
         GetPage(
             name: '/MainPage/ProgramSchdule/addProgramDayPage',
             page: () => AddProgramDayPage())
