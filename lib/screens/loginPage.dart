@@ -1,11 +1,12 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cted/Controller/programsDataController.dart';
 //hide 키워드를 사용하면 적힌 클래스를 제외한 클래스만 사용이 가능하다. 라이브러리간의 충돌을 막기 위함임.(firebase_ui_auth랑 firebase_auth)
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'mainPage.dart';
-import 'package:provider/provider.dart';
-import 'package:cted/models/userData.dart';
+import 'package:cted/screens/mainPage.dart';
+import 'package:cted/Controller/userDataController.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -18,13 +19,11 @@ class LoginPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            //로그인에 성공하면 현재 유저의 정보를 받아 UserData를 객체를 만들어 Provider로 구독한다.
-            final user = FirebaseAuth.instance.currentUser;
-            return ChangeNotifierProvider(
-                create: (_) => UserData(user: user!),
-                builder: (context, child) {
-                  return MainPage();
-                });
+            //로그인에 성공하면 Getx의 UserDataController의 인스턴스를 생성.
+            Get.put(UserDataController());
+            //Getx의 ProgramsDataController의 인스턴스 생성.
+            Get.put(ProgramsDataController());
+            return MainPage();
           } else {
             //로그인된 유저 정보가 없으면 로그인 창을 띄운다.
             return Scaffold(

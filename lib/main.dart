@@ -25,9 +25,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: _themeData(),
-        home: LoginPage());
+      debugShowCheckedModeBanner: false,
+      theme: _themeData(),
+      home: LoginPage(),
+    );
   }
 }
 
