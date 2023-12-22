@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cted/Controller/userDataController.dart';
 import 'package:cted/file_manager.dart';
 import 'package:cted/screens/userProgramsListPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,12 +27,6 @@ class _MainPageState extends State<MainPage> {
         .get();
     String tmp = result['content'];
     return tmp;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   @override

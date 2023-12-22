@@ -15,7 +15,7 @@ class AddDayBottomSheet extends StatefulWidget {
 }
 
 class _AddDayBottomSheetState extends State<AddDayBottomSheet> {
-  String? day;
+  String? day; //드롭박스에서 선택한 day
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
@@ -43,6 +43,7 @@ class _AddDayBottomSheetState extends State<AddDayBottomSheet> {
                 //day 선택하는 드롭다운메뉴
                 Center(
                   child: DropdownMenu<String>(
+                    menuHeight: 300,
                     width: 300,
                     hintText: "Day",
                     onSelected: (String? value) {
@@ -62,12 +63,14 @@ class _AddDayBottomSheetState extends State<AddDayBottomSheet> {
                   children: [
                     //Add버튼
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         if (_validationDay()) {
-                          Get.find<UserDataController>().updateScheduleDays(
-                              date: widget.date,
-                              programName: widget.programName,
-                              day: day!);
+                          await Get.find<UserDataController>()
+                              .updateScheduleDays(
+                                  selectedDate: widget.date,
+                                  programName: widget.programName,
+                                  day: day!);
+                          Get.back();
                         } else {
                           //Day를 정하지 않고 Add를 누르면 SnackBar나옴
                           Get.snackbar("필수 정보", "Day를 선택해 주세요.",
@@ -95,6 +98,7 @@ class _AddDayBottomSheetState extends State<AddDayBottomSheet> {
                         ),
                       ),
                     ),
+                    //Add버튼과 Cancel버튼 사이 간격
                     SizedBox(width: 50),
                     //Cancel버튼
                     GestureDetector(

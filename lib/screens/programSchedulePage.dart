@@ -2,6 +2,7 @@ import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cted/Controller/userDataController.dart';
 import 'package:cted/screens/addDayBottomSheet.dart';
+import 'package:cted/widgets/dayDeleteDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,7 @@ class ProgramSchedulePage extends StatefulWidget {
 class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
-
+  final String programName = Get.arguments['programName'];
   DateTime _selectedDate = DateTime.now();
 
   @override
@@ -25,7 +26,7 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
       appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-          title: Text(Get.arguments['programName']),
+          title: Text(programName),
           actions: [
             //오른쪽 상단에 있는 DatePicker
             IconButton(
@@ -70,7 +71,7 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
                       //+Add Day버튼을 Tap하면 Bottomsheet이 올라온다.
                       Get.bottomSheet(
                               AddDayBottomSheet(
-                                  programName: Get.arguments['programName'],
+                                  programName: programName,
                                   date: _selectedDate),
                               backgroundColor: Colors.white)
                           .then((value) {
@@ -89,7 +90,6 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
               onDateSelected: (date) {
                 setState(() {
                   _selectedDate = date;
-                  print(_selectedDate);
                 });
               },
               leftMargin: 100,
@@ -105,12 +105,9 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
           Expanded(
             child: FutureBuilder<List<String>>(
                 future: Get.find<UserDataController>().getScheduleDays(
-                    programName: Get.arguments['programName'],
-                    selectedDate: _selectedDate),
+                    programName: programName, selectedDate: _selectedDate),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    print(snapshot.hasData);
-                    print(snapshot.data);
                     return GetBuilder<UserDataController>(
                       builder: (controller) => Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -119,7 +116,9 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
                             itemBuilder: (context, index) {
                               //각각 Day 카드
                               return GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  //content
+                                },
                                 child: Container(
                                   child: Column(
                                     crossAxisAlignment:
@@ -131,15 +130,25 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
                                         margin:
                                             EdgeInsets.only(top: 5, right: 5),
                                         child: GestureDetector(
-                                          onTap: () {
-                                            //Program 지우는 dialog창 띄우기
-                                            print("delete program?");
-                                          },
                                           child: Icon(
                                             Icons.delete,
                                             color: Colors.red,
                                             size: 20,
                                           ),
+                                          onTap: () async {
+                                            //day 지우는 dialog창 띄우기
+                                            await showDialog(
+                                                context: context,
+                                                builder: (_) {
+                                                  return DayDeleteDialog(
+                                                    selectedDate: _selectedDate,
+                                                    programName: programName,
+                                                    day: snapshot.data![index],
+                                                  );
+                                                }).then((_) {
+                                              setState(() {});
+                                            });
+                                          },
                                         ),
                                       ),
                                       //Day카드 Day텍스트

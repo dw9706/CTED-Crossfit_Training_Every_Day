@@ -20,7 +20,7 @@ class UserDataController extends GetxController {
     print("UserDataController 인스턴스 생성!!");
   }
 
-  late List<String> userProgramsName; //유저가 구독한 운동프로그램 이름들
+  late List<String> userProgramsName = []; //유저가 구독한 운동프로그램 이름들
 
   //firestore UserData컬렉션에 유저의 문서를 만든다.
   Future<void> makeUserDataDocument() async {
@@ -28,22 +28,22 @@ class UserDataController extends GetxController {
   }
 
   //firestore의 userData컬렉션에서 user의 doc을 가져와 리턴한다.
-  Future<int> getUserProgramsName() async {
+  Future<List<String>> getUserProgramsName() async {
     //user의 doc을 가져온다.
     DocumentSnapshot<Map<String, dynamic>> result =
         await firestore.collection('userData').doc("${user.uid}").get();
     //있으면 바로 리턴한다.
     if (result.exists) {
       //변수에 대입
-      userProgramsName = List<String>.from(result.data()!['programs'] as List);
+      userProgramsName = List<String>.from(result['programs'] as List);
       update();
-      return 0;
+      return userProgramsName;
     } else {
       //만약 user의 doc이 없으면 doc을 만들고 리턴한다.
       await makeUserDataDocument();
       userProgramsName = [];
       update();
-      return 0;
+      return userProgramsName;
     }
   }
 
@@ -63,20 +63,52 @@ class UserDataController extends GetxController {
   }
 
   //selected 날짜에 운동프로그램 day를 등록한다.
-  void updateScheduleDays(
-      {required DateTime date,
+  Future<void> updateScheduleDays(
+      {required DateTime selectedDate,
       required String programName,
       required String day}) async {
-    String fomatDate = date.toString().substring(0, 10);
-    firestore
+    String fomatDate = selectedDate.toString().substring(0, 10);
+    await firestore
         .collection('userData')
         .doc(user!.uid)
         .collection('program Schedule')
         .doc(programName)
         .update({
-      fomatDate: FieldValue.arrayUnion([day])
-    }).then((_) {
-      Get.back();
+      fomatDate: FieldValue.arrayUnion(
+          [day]) //FieldValue : 해당 필드데이터, arrayUnion() : 배열에 없는 요소만 추가
     });
+  }
+
+  //선택한 day를 삭제한다.
+  Future<void> deleteScheduleDays(
+      {required DateTime selectedDate,
+      required String programName,
+      required String day}) async {
+    String fomatDate = selectedDate.toString().substring(0, 10);
+
+    await firestore
+        .collection('userData')
+        .doc(user!.uid)
+        .collection('program Schedule')
+        .doc(programName)
+        .update({
+      fomatDate: FieldValue.arrayRemove(
+          [day]) //FieldValue : 해당 필드데이터, arrayRemove(): 제공된 각 요소의 모든 인스턴스를 삭제
+    });
+  }
+
+  Future<void> deleteSubscribedProgram({required String programName}) async {
+    //유저아이디 문서의 programs필드에서 프로그램이름을 지운다.
+    await firestore.collection('userData').doc(user!.uid).update({
+      'programs': FieldValue.arrayRemove([programName])
+    });
+
+    //program Schedule 컬렉션에서 프로그램이름으로 된 문서를 지운다.
+    await firestore
+        .collection('userData')
+        .doc(user!.uid)
+        .collection('program Schedule')
+        .doc(programName)
+        .delete();
   }
 }
