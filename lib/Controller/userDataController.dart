@@ -58,7 +58,17 @@ class UserDataController extends GetxController {
         .doc(programName)
         .get();
     List<String> dayList = List<String>.from(result[day] as List);
-    dayList.sort();
+    List<int> dayListFotInt = [];
+    for (int i = 0; i < dayList.length; i++) {
+      //day 12에서 숫자만 잘라서 다시 넣는다.
+      dayListFotInt.add(int.parse(dayList[i].substring(4)));
+    }
+    dayListFotInt.sort();
+
+    for (int i = 0; i < dayList.length; i++) {
+      dayList[i] = 'day ${dayListFotInt[i]}';
+    }
+    print(dayList);
     return dayList;
   }
 

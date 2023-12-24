@@ -28,4 +28,17 @@ class ProgramsDataController extends GetxController {
     }
     return tmp;
   }
+
+  //Day Content를 가져온다.
+  Future<String> getDayContent(
+      {required String programName, required String day}) async {
+    var result = await firestore
+        .collection('programsData')
+        .doc(programName)
+        .collection('days')
+        .doc(day)
+        .get();
+    String tmp = result['content'];
+    return tmp;
+  }
 }

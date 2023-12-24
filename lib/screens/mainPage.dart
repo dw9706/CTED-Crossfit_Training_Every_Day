@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cted/Controller/userDataController.dart';
-import 'package:cted/file_manager.dart';
 import 'package:cted/screens/userProgramsListPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,28 +12,21 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // This widget is the root of your application.
-  FileManager fileManager = FileManager();
+  //FileManager fileManager = FileManager();
   int bottomBarIndex = 0;
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
-  getContent() async {
-    var result = await firestore
-        .collection('Programs')
-        .doc('Crossfit(kdw)')
-        .collection('days')
-        .doc('day1')
-        .get();
-    String tmp = result['content'];
-    return tmp;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("CTED - Crossfit Training Every Day"),
+          title: Text(
+            "CTED - Crossfit Training Every Day",
+            style: TextStyle(fontSize: 18),
+          ),
           leading: IconButton(
-            icon: Icon(Icons.menu),
+            icon: Icon(Icons.logout),
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
@@ -44,31 +35,7 @@ class _MainPageState extends State<MainPage> {
         body: [
           UserProgramsListPage(),
           TestWidget(), //Test
-          FutureBuilder(
-              future: getContent(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  String content = snapshot.data.toString();
-                  return SingleChildScrollView(
-                    child: Text(
-                      content,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                    ),
-                    scrollDirection: Axis.vertical,
-                  );
-                } else if (snapshot.hasError) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  );
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              }), //Test
+          Text('마이페이지') //Test
         ][bottomBarIndex],
         // BottomBar
         bottomNavigationBar: BottomNavigationBar(
@@ -99,46 +66,61 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class TestWidget extends StatelessWidget {
+class TestWidget extends StatefulWidget {
+  @override
+  State<TestWidget> createState() => _TestWidgetState();
+}
+
+class _TestWidgetState extends State<TestWidget> {
   String tmp = '';
+  String day = '';
+  final fieldText = TextEditingController();
   final firestore = FirebaseFirestore.instance;
-  FileManager fileManager = FileManager();
+
+  //FileManager fileManager = FileManager();
+  bool _showCircle = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await fileManager.writeTextFile(tmp);
           await firestore
-              .collection('Programs')
-              .doc('Crossfit(kdw)')
+              .collection('programsData')
+              .doc('Power lifting(kdw)')
               .collection('days')
-              .doc('day1')
-              .update({'content': tmp}).then((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ShowText(),
-              ),
-            );
-          });
+              .doc('day $day')
+              .set({'content': tmp});
+          fieldText.clear();
         },
       ),
-      body: TextField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        onChanged: (value) {
-          tmp = value;
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextField(
+              onChanged: (value) {
+                day = value;
+              },
+            ),
+            TextField(
+              controller: fieldText,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              onChanged: (value) {
+                tmp = value;
+                print(tmp);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class ShowText extends StatelessWidget {
-  FileManager fileManager = FileManager();
+  //FileManager fileManager = FileManager();
   getFilecontent() async {
-    return await fileManager.readTextFile();
+    //return await fileManager.readTextFile();
   }
 
   @override

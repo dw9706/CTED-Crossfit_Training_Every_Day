@@ -2,6 +2,7 @@ import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cted/Controller/userDataController.dart';
 import 'package:cted/screens/addDayBottomSheet.dart';
+import 'package:cted/screens/dayContentPage.dart';
 import 'package:cted/widgets/dayDeleteDialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,11 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
-          leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Get.back();
+              }),
           title: Text(programName),
           actions: [
             //오른쪽 상단에 있는 DatePicker
@@ -117,7 +122,11 @@ class _ProgramSchedulePageState extends State<ProgramSchedulePage> {
                               //각각 Day 카드
                               return GestureDetector(
                                 onTap: () {
-                                  //content
+                                  //DayContentPage로 Get.to이동
+                                  Get.to(() => DayContentPage(), arguments: {
+                                    'programName': programName,
+                                    'day': snapshot.data![index]
+                                  });
                                 },
                                 child: Container(
                                   child: Column(
