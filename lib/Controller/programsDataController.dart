@@ -41,4 +41,31 @@ class ProgramsDataController extends GetxController {
     String tmp = result['content'];
     return tmp;
   }
+
+  Future<Map<String, List<String>>> getProgramInformation(
+      {required String keyword}) async {
+    List<String> programNames = [];
+    List<String> programAuthors = [];
+    List<String> programDays = [];
+    var result = await firestore.collection('programsData').get();
+
+    if (keyword == '') {
+      for (var doc in result.docs) {
+        programNames.add(doc.data()['name']);
+        programAuthors.add(doc.data()['author']);
+        programDays.add(doc.data()['numberOfDays'].toString());
+      }
+      return {
+        'programNames': programNames,
+        'programAuthors': programAuthors,
+        'programDays': programDays
+      };
+    } else {
+      return {
+        'programNames': programNames,
+        'programAuthors': programAuthors,
+        'programDays': programDays
+      };
+    }
+  }
 }
