@@ -24,9 +24,11 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
             List<String> programNames = snapshot.data!['programNames']!;
             List<String> programAuthors = snapshot.data!['programAuthors']!;
             List<String> programDays = snapshot.data!['programDays']!;
+            List<String> programFollowers = snapshot.data!['programFollowers']!;
 
             return Column(
               children: [
+                //검색창 부분
                 Row(
                   children: [
                     Container(
@@ -61,43 +63,68 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                     child: ListView.builder(
                         itemCount: programNames.length,
                         itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                    left: 20, top: 10, right: 20, bottom: 0),
-                                height: 60,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      programNames[index],
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w500),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Row(
+                          return GestureDetector(
+                            onTap: () async {
+                              print('${programNames[index]}');
+                              await Get.find<ProgramsDataController>()
+                                  .minusProgramFollowers(
+                                      programName: programNames[index]);
+                            },
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: 20,
+                                        top: 10,
+                                        right: 20,
+                                        bottom: 0),
+                                    height: 60,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
+                                        // 프로그램 이름 있는 부분
                                         Text(
-                                          'author: ${programAuthors[index]}',
+                                          programNames[index],
+                                          style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w500),
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Text(
-                                          'day: ${programDays[index]}',
-                                          overflow: TextOverflow.ellipsis,
+                                        //Author, Days, Followers 있는 부분
+                                        Row(
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                'Author: ${programAuthors[index]}',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              width: 120,
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                'Days: ${programDays[index]}',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              width: 90,
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                'Followers: ${programFollowers[index]}',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              width: 120,
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  ),
+                                  Divider()
+                                ],
                               ),
-                              Divider()
-                            ],
+                            ),
                           );
                         }))
               ],

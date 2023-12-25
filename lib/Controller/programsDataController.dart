@@ -42,11 +42,13 @@ class ProgramsDataController extends GetxController {
     return tmp;
   }
 
+  //프로그램의 정보들을 가져온다.
   Future<Map<String, List<String>>> getProgramInformation(
       {required String keyword}) async {
     List<String> programNames = [];
     List<String> programAuthors = [];
     List<String> programDays = [];
+    List<String> programFollowers = [];
     var result = await firestore.collection('programsData').get();
 
     if (keyword == '') {
@@ -54,11 +56,13 @@ class ProgramsDataController extends GetxController {
         programNames.add(doc.data()['name']);
         programAuthors.add(doc.data()['author']);
         programDays.add(doc.data()['numberOfDays'].toString());
+        programFollowers.add(doc.data()['followers'].toString());
       }
       return {
         'programNames': programNames,
         'programAuthors': programAuthors,
-        'programDays': programDays
+        'programDays': programDays,
+        'programFollowers': programFollowers
       };
     } else {
       return {
@@ -67,5 +71,31 @@ class ProgramsDataController extends GetxController {
         'programDays': programDays
       };
     }
+  }
+
+  //프로그램의 Followers숫자를 하나 내린다.
+  Future<void> minusProgramFollowers({required String programName}) async {
+    var result =
+        await firestore.collection('programsData').doc(programName).get();
+
+    int minusProgramFollowers = result.data()!['followers'] - 1;
+
+    await firestore
+        .collection('programsData')
+        .doc(programName)
+        .update({'followers': minusProgramFollowers});
+  }
+
+  //프로그램의 Followers숫자를 하나 올린다.
+  Future<void> plusProgramFollowers({required String programName}) async {
+    var result =
+        await firestore.collection('programsData').doc(programName).get();
+
+    int plusProgramFollowers = result.data()!['followers'] + 1;
+
+    await firestore
+        .collection('programsData')
+        .doc(programName)
+        .update({'followers': minusProgramFollowers});
   }
 }

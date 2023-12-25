@@ -1,3 +1,4 @@
+import 'package:cted/Controller/programsDataController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -107,6 +108,7 @@ class UserDataController extends GetxController {
     });
   }
 
+  //구독한 운동프로그램을 삭제한다.
   Future<void> deleteSubscribedProgram({required String programName}) async {
     //유저아이디 문서의 programs필드에서 프로그램이름을 지운다.
     await firestore.collection('userData').doc(user!.uid).update({
@@ -120,5 +122,8 @@ class UserDataController extends GetxController {
         .collection('program Schedule')
         .doc(programName)
         .delete();
+
+    await Get.find<ProgramsDataController>()
+        .minusProgramFollowers(programName: programName);
   }
 }
