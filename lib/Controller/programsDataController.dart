@@ -50,14 +50,16 @@ class ProgramsDataController extends GetxController {
     List<String> programDays = [];
     List<String> programFollowers = [];
     var result = await firestore.collection('programsData').get();
+    // 프로그램 정보들을 List안에 담는다.
+    for (var doc in result.docs) {
+      programNames.add(doc.data()['name']);
+      programAuthors.add(doc.data()['author']);
+      programDays.add(doc.data()['numberOfDays'].toString());
+      programFollowers.add(doc.data()['followers'].toString());
+    }
 
     if (keyword == '') {
-      for (var doc in result.docs) {
-        programNames.add(doc.data()['name']);
-        programAuthors.add(doc.data()['author']);
-        programDays.add(doc.data()['numberOfDays'].toString());
-        programFollowers.add(doc.data()['followers'].toString());
-      }
+      //모든 프로그램의 정보를 리턴
       return {
         'programNames': programNames,
         'programAuthors': programAuthors,
@@ -65,10 +67,31 @@ class ProgramsDataController extends GetxController {
         'programFollowers': programFollowers
       };
     } else {
+      // keyword를 포함하는 프로그램의 정보를 리턴
+      List<String> keywordProgramNames = [];
+      List<String> keywordProgramAuthors = [];
+      List<String> keywordProgramDays = [];
+      List<String> keywordProgramFollowers = [];
+
+      //keyword를 소문자로 변환
+      keyword = keyword.toLowerCase();
+
+      for (int i = 0; i < programNames.length; i++) {
+        //프로그램의 이름을 소문자로 변환
+        String tmpProgramName = programNames[i].toLowerCase();
+        // 소문자로 변환된 키워드와 프로그램의 이름을 비교
+        if (tmpProgramName.contains(keyword)) {
+          keywordProgramNames.add(programNames[i]);
+          keywordProgramAuthors.add(programAuthors[i]);
+          keywordProgramDays.add(programDays[i]);
+          keywordProgramFollowers.add(programFollowers[i]);
+        }
+      }
       return {
-        'programNames': programNames,
-        'programAuthors': programAuthors,
-        'programDays': programDays
+        'programNames': keywordProgramNames,
+        'programAuthors': keywordProgramAuthors,
+        'programDays': keywordProgramDays,
+        'programFollowers': keywordProgramFollowers
       };
     }
   }
