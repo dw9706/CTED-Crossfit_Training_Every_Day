@@ -109,12 +109,11 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                                               ),
                                               width: 90,
                                             ),
-                                            Container(
+                                            Expanded(
                                               child: Text(
                                                 'Followers: ${programFollowers[index]}',
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              width: 120,
                                             )
                                           ],
                                         )
