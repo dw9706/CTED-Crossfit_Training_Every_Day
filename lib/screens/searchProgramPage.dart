@@ -66,9 +66,6 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                           return GestureDetector(
                             onTap: () async {
                               print('${programNames[index]}');
-                              await Get.find<ProgramsDataController>()
-                                  .minusProgramFollowers(
-                                      programName: programNames[index]);
                             },
                             child: Container(
                               child: Column(

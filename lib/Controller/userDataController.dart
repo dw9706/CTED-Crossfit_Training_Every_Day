@@ -6,20 +6,10 @@ import 'package:get/get.dart';
 final firestore = FirebaseFirestore.instance;
 
 class UserDataController extends GetxController {
-  late User user;
-
-  static final UserDataController _instance = UserDataController._internal();
-
-  //싱글톤 패턴
-  factory UserDataController() {
-    return _instance;
+  UserDataController({required this.user}) {
+    print('${user.uid}');
   }
-
-  UserDataController._internal() {
-    //컨트롤러를 처음 생성할때 유저의 정보를 받는다.
-    user = FirebaseAuth.instance.currentUser!;
-    print("UserDataController 인스턴스 생성!!");
-  }
+  User user;
 
   late List<String> userProgramsName = []; //유저가 구독한 운동프로그램 이름들
 

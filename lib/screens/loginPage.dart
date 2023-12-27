@@ -19,10 +19,6 @@ class LoginPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            //로그인에 성공하면 Getx의 UserDataController의 인스턴스를 생성.
-            Get.put(UserDataController());
-            //Getx의 ProgramsDataController의 인스턴스 생성.
-            Get.put(ProgramsDataController());
             return MainPage();
           } else {
             //로그인된 유저 정보가 없으면 로그인 창을 띄운다.

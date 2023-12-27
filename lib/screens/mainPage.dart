@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cted/Controller/programsDataController.dart';
+import 'package:cted/Controller/userDataController.dart';
 import 'package:cted/screens/searchProgramPage.dart';
 import 'package:cted/screens/userProgramsListPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -17,6 +20,23 @@ class _MainPageState extends State<MainPage> {
   int bottomBarIndex = 0;
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //로그인에 성공하면 Getx의 UserDataController의 인스턴스를 생성.
+    Get.put(UserDataController(user: user!));
+    //Getx의 ProgramsDataController의 인스턴스 생성.
+    Get.put(ProgramsDataController());
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Get.delete<UserDataController>();
+  }
 
   @override
   Widget build(BuildContext context) {
