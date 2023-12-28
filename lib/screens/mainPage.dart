@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cted/Controller/programsDataController.dart';
 import 'package:cted/Controller/userDataController.dart';
+import 'package:cted/screens/myPage.dart';
 import 'package:cted/screens/searchProgramPage.dart';
 import 'package:cted/screens/userProgramsListPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,7 +57,7 @@ class _MainPageState extends State<MainPage> {
         body: [
           UserProgramsListPage(),
           SearchProgramPage(), //Test
-          Text('마이페이지') //Test
+          MyPage() //Test
         ][bottomBarIndex],
         // BottomBar
         bottomNavigationBar: BottomNavigationBar(

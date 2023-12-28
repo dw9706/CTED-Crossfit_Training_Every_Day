@@ -42,8 +42,8 @@ class ProgramsDataController extends GetxController {
     return tmp;
   }
 
-  //프로그램의 정보들을 가져온다.
-  Future<Map<String, List<String>>> getProgramInformation(
+  //모든 프로그램의 정보 또는 검색된 프로그램들의 정보들을 가져온다.
+  Future<Map<String, List<String>>> getProgramsInformation(
       {required String keyword}) async {
     List<String> programNames = [];
     List<String> programAuthors = [];
@@ -96,6 +96,14 @@ class ProgramsDataController extends GetxController {
     }
   }
 
+  //프로그램 하나의 정보들을 가져온다.
+  Future<Map<String, dynamic>> getProgramInformation(
+      {required String programName}) async {
+    var result =
+        await firestore.collection('programsData').doc(programName).get();
+    return result.data()!;
+  }
+
   //프로그램의 Followers숫자를 하나 내린다.
   Future<void> minusProgramFollowers({required String programName}) async {
     var result =
@@ -119,6 +127,6 @@ class ProgramsDataController extends GetxController {
     await firestore
         .collection('programsData')
         .doc(programName)
-        .update({'followers': minusProgramFollowers});
+        .update({'followers': plusProgramFollowers});
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cted/Controller/programsDataController.dart';
+import 'package:cted/screens/programInfomationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +18,7 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Get.find<ProgramsDataController>()
-            .getProgramInformation(keyword: keyword),
+            .getProgramsInformation(keyword: keyword),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             //프로그램 이름들을 리스트에 초기화한다.
@@ -59,6 +60,7 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                   color: Colors.grey,
                   height: 1,
                 ),
+                //프로그램 목록 있는 부분
                 Expanded(
                     child: ListView.builder(
                         itemCount: programNames.length,
@@ -66,6 +68,10 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                           return GestureDetector(
                             onTap: () async {
                               print('${programNames[index]}');
+                              Get.to(() => ProgramInformationPage(),
+                                  arguments: {
+                                    'programName': programNames[index]
+                                  });
                             },
                             child: Container(
                               child: Column(
@@ -89,7 +95,7 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                                               fontWeight: FontWeight.w500),
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                        //Author, Days, Followers 있는 부분
+                                        //Author, Followers 있는 부분
                                         Row(
                                           children: [
                                             Container(
@@ -98,13 +104,6 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               width: 120,
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                'Days: ${programDays[index]}',
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              width: 90,
                                             ),
                                             Expanded(
                                               child: Text(

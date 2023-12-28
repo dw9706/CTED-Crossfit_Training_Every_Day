@@ -116,4 +116,27 @@ class UserDataController extends GetxController {
     await Get.find<ProgramsDataController>()
         .minusProgramFollowers(programName: programName);
   }
+
+  Future<bool> checkThisProgramSubcribed({required String programName}) async {
+    var result = await firestore.collection('userData').doc(user!.uid).get();
+    //프로그램이름이 있으면 true, 없으면 false를 반환
+    return result.data()!['programs'].contains(programName);
+  }
+
+  Future<void> subscribeProgram({required String programName}) async {
+    //programs필드에 프로그램이름 추가
+    await firestore.collection('userData').doc(user!.uid).update({
+      'programs': FieldValue.arrayUnion(["$programName"]),
+    });
+    //program Schedule 컬렉션에 문서 추가
+    await firestore
+        .collection('userData')
+        .doc(user!.uid)
+        .collection('program Schedule')
+        .doc(programName)
+        .set({});
+    //프로그램의 팔로워를 하나 올린다.
+    await Get.find<ProgramsDataController>()
+        .plusProgramFollowers(programName: programName);
+  }
 }

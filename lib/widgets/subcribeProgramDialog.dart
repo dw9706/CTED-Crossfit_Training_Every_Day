@@ -1,9 +1,10 @@
 import 'package:cted/Controller/userDataController.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SubscribedProgramsDeleteDialog extends StatelessWidget {
-  SubscribedProgramsDeleteDialog({required this.programName});
+class SubcribeProgramDialog extends StatelessWidget {
+  SubcribeProgramDialog({required this.programName});
   String programName;
 
   @override
@@ -16,7 +17,7 @@ class SubscribedProgramsDeleteDialog extends StatelessWidget {
           children: [
             //dialog 텍스트 부분
             Text(
-              "Do you want to delete ${programName}?",
+              "Do you want to subcribe?",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
@@ -27,21 +28,21 @@ class SubscribedProgramsDeleteDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //delete 버튼
+                //Yse 버튼
                 TextButton(
                   onPressed: () async {
                     await Get.find<UserDataController>()
-                        .deleteSubscribedProgram(programName: programName);
+                        .subscribeProgram(programName: programName);
                     Get.back();
                   },
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(
                       EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                     ),
-                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                    backgroundColor: MaterialStateProperty.all(Colors.black),
                   ),
                   child: Text(
-                    'delete',
+                    'Yes',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
