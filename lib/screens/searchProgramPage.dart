@@ -48,7 +48,7 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                             keyword = tmpText.trim();
                           });
                           tmpText = '';
-                          keywordTextFieldController.clear();
+                          //keywordTextFieldController.clear();
                         },
                         icon: Icon(Icons.search)),
                   ],
@@ -68,7 +68,7 @@ class _SearchProgramPageState extends State<SearchProgramPage> {
                           return GestureDetector(
                             onTap: () async {
                               print('${programNames[index]}');
-                              Get.to(() => ProgramInformationPage(),
+                              await Get.to(() => ProgramInformationPage(),
                                   arguments: {
                                     'programName': programNames[index]
                                   });

@@ -15,7 +15,8 @@ class UserDataController extends GetxController {
 
   //firestore UserData컬렉션에 유저의 문서를 만든다.
   Future<void> makeUserDataDocument() async {
-    await firestore.collection('userData').doc(user.uid).set({"programs": []});
+    await firestore.collection('userData').doc(user.uid).set(
+        {"programs": [], "name": 'Null', "sex": "Null", "country": "Null"});
   }
 
   //firestore의 userData컬렉션에서 user의 doc을 가져와 리턴한다.
@@ -138,5 +139,22 @@ class UserDataController extends GetxController {
     //프로그램의 팔로워를 하나 올린다.
     await Get.find<ProgramsDataController>()
         .plusProgramFollowers(programName: programName);
+  }
+
+  Future<List<String>> getUserData() async {
+    var tmp = await firestore.collection('userData').doc(user!.uid).get();
+    List<String> result = [];
+    result.add(tmp['name']);
+    result.add(tmp['sex']);
+    result.add(tmp['country']);
+    return result;
+  }
+
+  Future<void> updateUserData(
+      {required String fieldName, required String fieldData}) async {
+    await firestore
+        .collection('userData')
+        .doc(user!.uid)
+        .update({fieldName: fieldData});
   }
 }
