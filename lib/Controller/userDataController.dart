@@ -15,8 +15,18 @@ class UserDataController extends GetxController {
 
   //firestore UserData컬렉션에 유저의 문서를 만든다.
   Future<void> makeUserDataDocument() async {
-    await firestore.collection('userData').doc(user.uid).set(
-        {"programs": [], "name": 'Null', "sex": "Null", "country": "Null"});
+    await firestore.collection('userData').doc(user.uid).set({
+      "programs": [],
+      "name": 'Null',
+      "sex": "Null",
+      "country": "Null",
+      "Squat": 0,
+      "Deadlift": 0,
+      "Overhead Press": 0,
+      "Clean": 0,
+      "Snatch": 0,
+      "Clean & Jerk": 0
+    });
   }
 
   //firestore의 userData컬렉션에서 user의 doc을 가져와 리턴한다.
@@ -156,5 +166,25 @@ class UserDataController extends GetxController {
         .collection('userData')
         .doc(user!.uid)
         .update({fieldName: fieldData});
+  }
+
+  Future<List<int>> getUserRecord() async {
+    List<int> record = [];
+    var result = await firestore.collection('userData').doc(user!.uid).get();
+    record.add(result['Squat']);
+    record.add(result['Deadlift']);
+    record.add(result['Overhead Press']);
+    record.add(result['Clean']);
+    record.add(result['Snatch']);
+    record.add(result['Clean & Jerk']);
+    return record;
+  }
+
+  Future<void> updateRecord(
+      {required String type, required int changeRecord}) async {
+    await firestore
+        .collection('userData')
+        .doc(user!.uid)
+        .update({type: changeRecord});
   }
 }

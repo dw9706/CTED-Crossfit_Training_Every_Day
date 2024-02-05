@@ -1,4 +1,5 @@
 import 'package:cted/screens/accountPage.dart';
+import 'package:cted/screens/recordsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ class MyPage extends StatelessWidget {
   MyPage({super.key});
   final user = FirebaseAuth.instance.currentUser;
   List<String> myPageList = ['Account', 'Records'];
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -27,7 +29,7 @@ class MyPage extends StatelessWidget {
                             fontSize: 16, fontWeight: FontWeight.w400)),
                     IconButton(
                         onPressed: () {
-                          Get.to(() => AccountPage());
+                          Get.to(() => [AccountPage(), RecordPage()][index]);
                         },
                         iconSize: 16,
                         icon: Icon(Icons.arrow_forward_ios_outlined))
