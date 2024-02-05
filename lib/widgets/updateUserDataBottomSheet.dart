@@ -52,13 +52,11 @@ class _UpdateUserDataBottomSheetState extends State<UpdateUserDataBottomSheet> {
                             color: Colors.red,
                           ));
                     } else {
-                      await Get.find<UserDataController>()
-                          .updateUserData(
-                              fieldName: widget.fieldName.toLowerCase(),
-                              fieldData: changeText)
-                          .then((_) {
-                        Get.back();
-                      });
+                      await Get.find<UserDataController>().updateUserData(
+                          fieldName: widget.fieldName.toLowerCase(),
+                          fieldData: changeText);
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      Get.back();
                     }
                   },
                   child: Container(
@@ -82,6 +80,7 @@ class _UpdateUserDataBottomSheetState extends State<UpdateUserDataBottomSheet> {
                 //Cancel버튼
                 GestureDetector(
                   onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     Get.back();
                   },
                   child: Container(

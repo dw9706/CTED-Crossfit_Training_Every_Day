@@ -53,7 +53,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(
                             'Author',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 25, fontWeight: FontWeight.w300),
                           ),
                           margin: EdgeInsets.only(left: 20, right: 15)),
                       //Author 상자
@@ -65,7 +65,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           '$author',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
+                              fontSize: 20, fontWeight: FontWeight.w300),
                         ),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 2),
@@ -76,7 +76,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(
                             'Total Days',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 25, fontWeight: FontWeight.w300),
                           ),
                           margin: EdgeInsets.only(left: 20, right: 15)),
                       //Total Days 상자
@@ -87,7 +87,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(numberOfDays,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                                  fontSize: 20, fontWeight: FontWeight.w300)),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey, width: 2),
                               borderRadius:
@@ -97,7 +97,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(
                             'Followers',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 25, fontWeight: FontWeight.w300),
                           ),
                           margin: EdgeInsets.only(left: 20, right: 15)),
                       //Followers 상자
@@ -108,7 +108,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(followers,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                                  fontSize: 20, fontWeight: FontWeight.w300)),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey, width: 2),
                               borderRadius:
@@ -118,7 +118,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(
                             'Level',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 25, fontWeight: FontWeight.w300),
                           ),
                           margin: EdgeInsets.only(left: 20, right: 15)),
                       //Level 상자
@@ -129,7 +129,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(level,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                                  fontSize: 20, fontWeight: FontWeight.w300)),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey, width: 2),
                               borderRadius:
@@ -139,7 +139,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Text(
                             'Equipment',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 25, fontWeight: FontWeight.w300),
                           ),
                           margin: EdgeInsets.only(left: 20, right: 15)),
                       //Equipment 상자
@@ -150,7 +150,7 @@ class _ProgramInformationPageState extends State<ProgramInformationPage> {
                           child: Container(
                             child: Text(equipment,
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500)),
+                                    fontSize: 20, fontWeight: FontWeight.w300)),
                           ),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey, width: 2),

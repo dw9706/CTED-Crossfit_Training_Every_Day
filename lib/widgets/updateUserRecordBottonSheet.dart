@@ -70,6 +70,7 @@ class _UpdateUserRecordBottomSheetState
                     if (updateRecord != null) {
                       await Get.find<UserDataController>().updateRecord(
                           type: typeName, changeRecord: updateRecord);
+                      FocusManager.instance.primaryFocus?.unfocus();
                       Get.back();
                     } else {
                       Get.snackbar("입력값 오류", "값을 입력하세요",
@@ -102,6 +103,7 @@ class _UpdateUserRecordBottomSheetState
                 //Cancel버튼
                 GestureDetector(
                   onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     Get.back();
                   },
                   child: Container(
