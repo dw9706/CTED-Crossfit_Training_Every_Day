@@ -1,6 +1,8 @@
 import 'package:cted/Controller/programsDataController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class DayContentPage extends StatelessWidget {
   String programName = Get.arguments['programName'];
@@ -20,24 +22,12 @@ class DayContentPage extends StatelessWidget {
             //DayContent 부분
             if (snapshot.hasData) {
               return SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Center(
-                      //Day 텍스트 부분
-                      child: Text(day,
-                          style: TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.w500)),
-                    ),
-                    Container(
-                        width: double.infinity,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                        child: Text(
-                          content,
-                          style: TextStyle(fontSize: 17),
-                        )),
-                  ],
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: HtmlWidget('''
+                  ${content}
+                  '''),
                 ),
                 scrollDirection: Axis.vertical,
               );
