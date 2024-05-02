@@ -80,7 +80,7 @@ CTED는 우리 앱의 이름으로 위에 언급했듯 Crossfit Training Every D
 <br/><br/><br/>
 
 <center>
-<img width="25%" src="https://github.com/dw9706/CTED-Crossfit_Training_Every_Day/assets/77458624/0cfb2a86-d641-4110-ab69-eeb2efd4fccb" align="center"/> 
+<img width="25%" src="https://github.com/dw9706/CTED-Crossfit_Training_Every_Day/assets/77458624/d4478f7d-aecd-45f3-a4ad-0b486e67e6b8" align="center"/> 
 </center>
 <br/>
 
