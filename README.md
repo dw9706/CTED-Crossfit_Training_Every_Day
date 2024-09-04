@@ -5,12 +5,6 @@ CTED는 Crossfit Training Every Day의 약자로 크로스핏과 관련된 운�
     - 기능 소개
     - 사용 기술
 
-- 프로젝트를 하면서...
-    - 프로젝트 주제 선정 계기
-    - 느낀점
-
-- 마무리
-
 # 1. 프로젝트 소개
 CTED는 우리 앱의 이름으로 위에 언급했듯 Crossfit Training Every Day의 약자입니다. CTED에서 제공하는 운동프로그램을 구독하여 프로그램과 함께 운동할 수 있습니다. 
 
